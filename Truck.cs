@@ -1,60 +1,69 @@
-﻿using System.Text.Json;
+﻿using ConsoleApp17.Money;
+using System.Text.Json;
 
 namespace ConsoleApp17
 {
     class Truck
     {
+        Loader TruckLoader = new Loader("Trucks");
         MoneyManager money = new MoneyManager();
-
-        string TruckPath = @"C:\Users\PC\source\repos\ConsoleApp17\ConsoleApp17\Jsons\Trucks.Json";
-        string TruckJson => File.ReadAllText(TruckPath);
-
-        int FuelNeeded;
 
         List<TruckData> Data;
 
         public Truck()
         {
-            Data = JsonSerializer.Deserialize<List<TruckData>>(TruckJson);
+            Data = TruckLoader.Load<List<TruckData>>();
         }
 
         public void Move(int id,int distance,string location)
         {
              var truck = Data.FirstOrDefault(x => x.Id == id);
-            if (truck.FuelInTank >= (distance / 100) * truck.FuelUse && !truck.IsBusy)
+            if (truck != null)
             {
-                double hours = CalculateTravelTime(distance, truck.Speed);
-                truck.IsBusy = true;
-                truck.FuelInTank -= (distance / 100) * truck.FuelUse;
-                truck.Location = location;
+                if (truck.FuelInTank >= (distance / 100) * truck.FuelUse && !truck.IsBusy)
+                {
+                    double hours = CalculateTravelTime(distance, truck.Speed);
+                    truck.IsBusy = true;
+                    truck.FuelInTank -= (distance / 100) * truck.FuelUse;
+                    truck.Location = location;
 
-                truck.EstimatedArrival = DateTime.Now.AddSeconds(hours * 5);
-                Console.WriteLine($"Truck {truck.Id} is moving to {location}. Arrives in {truck.EstimatedArrival} seconds");
-            }
-            else
-            {
-                Console.WriteLine("Not enough fuel in tank.");
-                Refuel(truck);
+                    truck.EstimatedArrival = DateTime.Now.AddSeconds(hours * 5);
+                    while (truck.IsBusy)
+                    {
+                        Console.Clear();
+                        Console.WriteLine($"Truck {truck.Id} is moving to {location}. Arrives in {truck.EstimatedArrival} seconds");
+
+                        Thread.Sleep(100);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Not enough fuel in tank.");
+                    Refuel(truck);
+                }
             }
         }
         public void Refuel(TruckData truck)
         {
 
             double fuelNeeded = truck.TankSize - truck.FuelInTank;
-            double cost = fuelNeeded * money.FuelPrice;
+            double cost = fuelNeeded * 1.35;
             Console.WriteLine($"Refuel for {cost}?");
             string input = Console.ReadLine();
-            if (input.ToLower() == "y")
+            if (input != null)
             {
-                if (money.Money >= cost)
+                if (input.ToLower() == "y")
                 {
-                    truck.FuelInTank = truck.TankSize;
-                    money.SpendMoney(cost);
-                    Console.WriteLine($"Truck {truck.Id} refueled {fuelNeeded}L for ${cost}");
-                }
-                else
-                {
-                    Console.WriteLine($"Not enough money to refuel Truck {truck.Id}. Need ${cost:F2}, have ${money.Money:F2}");
+                    if (money.Money >= cost)
+                    {
+                        truck.FuelInTank = truck.TankSize;
+                        money.SpendMoney(cost);
+                        Console.WriteLine($"Truck {truck.Id} refueled {fuelNeeded}L for ${cost}");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Not enough money to refuel Truck {truck.Id}. Need ${cost}, have ${money.Money}");
+                    }
                 }
             }
         }
@@ -74,13 +83,12 @@ namespace ConsoleApp17
         public int Id { get; set; }
         public int Speed { get; set; }
         public int FuelInTank { get; set; }
-
         public bool IsBusy { get; set; } = false;
         public DateTime EstimatedArrival { get; set; } = DateTime.MinValue;
 
         public override string ToString()
         {
-            return $"Model: {Model} FuelUse: {FuelUse} TankSize: {TankSize} Id: {Id}";
+            return $"Model: {Model} Fuel used for 100km: {FuelUse} TankSize: {TankSize} Id: {Id}";
         }
     }
 }

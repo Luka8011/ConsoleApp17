@@ -4,6 +4,7 @@
     "ModelName": "Volvo FH16",
     "FuelUse": 32,
     "TankSize": 600,
+    "FuelInTank": 600,
     "Speed": 85,
     "Location": "Tbilisi"
   },
@@ -12,6 +13,7 @@
     "ModelName": "Scania R500",
     "FuelUse": 30,
     "TankSize": 550,
+    "FuelInTank": 550,
     "Speed": 82,
     "Location": "Baku"
   },
@@ -20,6 +22,7 @@
     "ModelName": "Mercedes-Benz Actros",
     "FuelUse": 28,
     "TankSize": 500,
+    "FuelInTank": 500,
     "Speed": 80,
     "Location": "Yerevan"
   },
@@ -28,6 +31,7 @@
     "ModelName": "MAN TGX",
     "FuelUse": 29,
     "TankSize": 580,
+    "FuelInTank": 580,
     "Speed": 83,
     "Location": "Ankara"
   },
@@ -36,6 +40,7 @@
     "ModelName": "DAF XF",
     "FuelUse": 27,
     "TankSize": 520,
+    "FuelInTank": 520,
     "Speed": 78,
     "Location": "Tehran"
   },
@@ -44,6 +49,7 @@
     "ModelName": "Iveco S-Way",
     "FuelUse": 31,
     "TankSize": 570,
+    "FuelInTank": 570,
     "Speed": 84,
     "Location": "Tbilisi"
   }
