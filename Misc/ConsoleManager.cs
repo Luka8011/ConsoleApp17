@@ -4,7 +4,8 @@ namespace ConsoleApp17.Misc
 {
     class ConsoleManager
     {
-        MoneyManager moneyManager = new MoneyManager();
+        MoneyManager money = Session.CurrentUserMoney;
+        UserHandler user = Session.UserHandler;
         public void ShowCommands(int input)
         {
             switch (input) 
@@ -18,45 +19,51 @@ namespace ConsoleApp17.Misc
                     "4) Generate a job",
                     "5) Order a new truck"
                     );
-                    break;
-                case 2:
-                    Console.WriteLine(
-                    "---Truck Manager---",
-                    "1) Refuel",
-                    "2) Move to a new city",
-                    "3) Repair",
-                    "4) Generate a job",
-                    "5) Exit"
-                    );
-                    break;
-                case 3:
-                    Console.WriteLine(
-                    "---Bank Manager---",
-                    "1) Take out debt",
-                    "2) Check out debt",
-                    "3) Pay back debt",
-                    "4) Purchase new liscense",
-                    "5) Exit"
-                    );
-                    break;
-                case 4:
-                    Console.WriteLine(
-                    "---Job Generator---",
-                    "1) Generate job",
-                    "2) Accept job",
-                    "3) Decline job",
-                    "5) Exit"
-                    );
+                    switch (input) 
+                    {
+                        case 1:
+                            //ShowAllTrucks();
+                            break;
+                        case 2:
+                            Console.WriteLine(
+                            "---Truck Manager---",
+                            "1) Refuel",
+                            "2) Move to a new city",
+                            "3) Repair",
+                            "4) Generate a job",
+                            "5) Exit"
+                            );
+                            break;
+                        case 3:
+                            Console.WriteLine(
+                            "---Bank Manager---",
+                            "1) Take out debt",
+                            "2) Check out debt",
+                            "3) Pay back debt",
+                            "4) See the shop",
+                            "5) Exit"
+                            );
+                            break;
+                        case 4:
+                            Console.WriteLine(
+                            "---Job Generator---",
+                            "1) Generate job",
+                            "2) Accept job",
+                            "3) Decline job",
+                            "5) Exit"
+                            );
+                            break;
+                    }
                     break;
             }
         }
         public void ShowBank()
         {
-            moneyManager.ToString();
+            money.ToString();
         }
-        public void ShowAllTrucks(List<TruckData> trucks)
+        public void ShowAllTrucks(UserHandler user)
         {
-            foreach (var truck in trucks)
+            foreach (var truck in user.OwnedTruckIds)
             {
                 truck.ToString();
             }

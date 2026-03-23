@@ -2,34 +2,25 @@
 
 namespace ConsoleApp17.Money
 {
-    class MoneyManager
+    class MoneyManager 
     {
-        public double Money { get; set; }
-        public double Debt { get; set; }
-        public double FuelPrice { get; set; } = 1.2;
+        private UserHandler.UserData userData;
 
-        Loader BankLoader = new Loader("Bank");
-
-        public MoneyManager()
+        public MoneyManager(string name)
         {
-            var data = BankLoader.Load<MoneyManager>();
-
-            Money = data.Money;
-            Debt = data.Debt;
-            FuelPrice = data.FuelPrice;
+            userData = UserHandler.LoadUser(name);
         }
-
         public override string ToString()
         {
-            return $"Money In Acc: {Money}, Debt: {Debt}";
+            return $"Money In Acc: {userData.Money}, Debt: {userData.Debt}";
         }
 
         public void SpendMoney(double amount)
         {
-            if (Money >= amount)
+            if (userData.Money >= amount)
             {
-                Money -= amount;
-                BankLoader.Save<MoneyManager>(); 
+                userData.Money -= amount;
+                UserHandler.SaveUser(userData);
             }
             else
             {
@@ -39,8 +30,8 @@ namespace ConsoleApp17.Money
 
         public void AddMoney(double amount)
         {
-            Money += amount;
-            BankLoader.Save<MoneyManager>(); 
+            userData.Money += amount;
+            UserHandler.SaveUser(userData);
         }
     }
 }

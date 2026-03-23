@@ -6,7 +6,8 @@
     "TankSize": 600,
     "FuelInTank": 600,
     "Speed": 85,
-    "Location": "Tbilisi"
+    "Location": "Base",
+    "Price": 36000
   },
   {
     "Id": 2,
@@ -15,7 +16,8 @@
     "TankSize": 550,
     "FuelInTank": 550,
     "Speed": 82,
-    "Location": "Baku"
+    "Location": "Base",
+    "Price": 34000
   },
   {
     "Id": 3,
@@ -24,7 +26,8 @@
     "TankSize": 500,
     "FuelInTank": 500,
     "Speed": 80,
-    "Location": "Yerevan"
+    "Location": "Base",
+    "Price": 33000
   },
   {
     "Id": 4,
@@ -33,7 +36,8 @@
     "TankSize": 580,
     "FuelInTank": 580,
     "Speed": 83,
-    "Location": "Ankara"
+    "Location": "Base",
+    "Price": 32000
   },
   {
     "Id": 5,
@@ -42,7 +46,8 @@
     "TankSize": 520,
     "FuelInTank": 520,
     "Speed": 78,
-    "Location": "Tehran"
+    "Location": "Base",
+    "Price": 31000
   },
   {
     "Id": 6,
@@ -51,6 +56,7 @@
     "TankSize": 570,
     "FuelInTank": 570,
     "Speed": 84,
-    "Location": "Tbilisi"
+    "Location": "Base",
+    "Price": 31600
   }
 ]

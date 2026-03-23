@@ -8,7 +8,23 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Data\GameData\Trucks.Json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Data\GameData\Trucks.Json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Data\Users\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Data\GameData\Locations.Json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
