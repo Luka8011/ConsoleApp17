@@ -1,8 +1,6 @@
-﻿using System;
-
-namespace ConsoleApp17.Money
+﻿namespace ConsoleApp17.Money
 {
-    class MoneyManager 
+    class MoneyManager
     {
         private UserHandler.UserData userData;
 
@@ -32,6 +30,38 @@ namespace ConsoleApp17.Money
         {
             userData.Money += amount;
             UserHandler.SaveUser(userData);
+        }
+
+        public void TakeOutDebt(double amount)
+        {
+            AddMoney(amount);
+            userData.Debt += amount;
+        }
+
+        public void PayBackDebt(double amount)
+        {
+            if (userData.Money >= amount)
+            {
+                SpendMoney(amount);
+                userData.Debt -= amount;
+            }
+            else
+            {
+                Console.WriteLine("can't pay back that much");
+                return;
+            }
+        }
+
+        public void PayPercentage(double percent)
+        {
+            double payment = userData.Debt * percent;
+            userData.Debt -= payment;
+            if (userData.Debt < 0)
+            {
+                userData.Debt = 0;
+            }
+
+            Console.WriteLine($"Debt Payment made:{payment}, Remaining Debt {userData.Debt}");
         }
     }
 }

@@ -1,12 +1,11 @@
-﻿using ConsoleApp17.Misc;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace ConsoleApp17
+namespace ConsoleApp17.Misc
 {
     class Service
     {

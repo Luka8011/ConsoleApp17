@@ -1,12 +1,4 @@
-﻿using ConsoleApp17.Misc;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.Design;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ConsoleApp17.Money
+﻿namespace ConsoleApp17.Money
 {
     class Shop
     {
@@ -19,6 +11,10 @@ namespace ConsoleApp17.Money
             {
                 money.SpendMoney(8000);
                 user.LicenseGrade++;
+            }
+            else
+            {
+                Console.WriteLine("Already max lvl license");
             }
         }
 
@@ -33,7 +29,7 @@ namespace ConsoleApp17.Money
                 {
                     Console.WriteLine($"Buy truck {selectedTruck.ModelName} for {selectedTruck.Price}? (y/n)");
                     string input = Console.ReadLine();
-                    if (input!= null)
+                    if (input != null)
                     {
                         if (input.ToLower() == "y")
                         {

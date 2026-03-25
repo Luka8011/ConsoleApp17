@@ -1,6 +1,4 @@
-﻿using ConsoleApp17.Misc;
-using ConsoleApp17.Money;
-using System.Text.Json;
+﻿using ConsoleApp17.Money;
 
 namespace ConsoleApp17
 {
@@ -61,7 +59,7 @@ namespace ConsoleApp17
                     }
                 }
             }
-            
+
         }
         public void Refuel(TruckData truck)
         {
@@ -109,7 +107,7 @@ namespace ConsoleApp17
         }
 
     }
-    #endregion
+        #endregion
 
     #region NestedClasses
     public class TruckData
@@ -127,7 +125,7 @@ namespace ConsoleApp17
 
         public override string ToString()
         {
-            return $"Model: {ModelName} Fuel used for 100km: {FuelUse} TankSize: {TankSize} Id: {Id}";
+            return $"Model: {ModelName} Fuel used for 100km: {FuelUse} TankSize: {TankSize} Id: {Id} Speed: {Speed}";
         }
     }
     #endregion
