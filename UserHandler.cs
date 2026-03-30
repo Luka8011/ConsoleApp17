@@ -25,7 +25,7 @@ namespace ConsoleApp17
         #endregion
 
         #region Methods
-        public static void CreateUser(string name, string email, string password)
+        public static void CreateUser(string name, string password)
         {
             string projectPath = Directory.GetParent(AppDomain.CurrentDomain.BaseDirectory)
                               .Parent
@@ -46,7 +46,7 @@ namespace ConsoleApp17
             var userData = new UserData
             {
                 Name = name,
-                Email = email,
+                Email = name,
                 Password = password,
                 Money = 5000,
                 Debt = 0,

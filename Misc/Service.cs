@@ -5,7 +5,7 @@ class Service
 {
     public UserHandler.UserData CurrentUserData { get; set; }
 
-    public UserHandler.UserData Register(string name, string email, string password)
+    public UserHandler.UserData Register(string name, string password)
     {
         var existingUser = UserHandler.LoadUser(name);
         if (existingUser != null)
@@ -14,7 +14,7 @@ class Service
             return null;
         }
 
-        UserHandler.CreateUser(name, email, password);
+        UserHandler.CreateUser(name, password);
 
         var user = UserHandler.LoadUser(name);
 

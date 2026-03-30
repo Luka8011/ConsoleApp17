@@ -25,7 +25,8 @@ public class BankMenu : Menu
             Console.WriteLine("1) Take Out Debt");
             Console.WriteLine("2) Pay Back Debt");
             Console.WriteLine("3) Back");
-            Console.WriteLine("Note: 25% of total debt is paid automatically every minute.");
+            Console.WriteLine("25% of total debt is paid automatically every minute.");
+            Console.WriteLine("For Every owned truck you pay $10000 every 5 mins");
 
             if (Console.KeyAvailable)
             {
