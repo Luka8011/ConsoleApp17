@@ -4,18 +4,18 @@ using ConsoleApp17.Money;
 
 public class ShopMenu : Menu
 {
-    Shop shop = new Shop();
-    UserHandler user = Session.UserHandler;
-
     Loader TruckLoader;
-    List<TruckData> trucks;
+    List<Truck.TruckData> trucks;
+    Shop shop = new Shop();
     public ShopMenu()
     {
         TruckLoader = new Loader("Trucks");
-        trucks = TruckLoader.Load<List<TruckData>>();
+        trucks = TruckLoader.Load<List<Truck.TruckData>>();
     }
     public override void Show()
     {
+        var user = Session.User;
+
         Console.WriteLine("---Shop---");
         Console.WriteLine($"1) Buy next license lvl. Max lvl 3. Current lvl {user.LicenseGrade}");
         Console.WriteLine("2) Buy a truck");
@@ -46,17 +46,43 @@ public class ShopMenu : Menu
     }
     public void PickATruck()
     {
-        Console.WriteLine("---Select A Truck By Id---");
+        var user = Session.User;
         var notOwnedTrucks = trucks
-            .Where(t => !user.OwnedTruckIds.Contains(t.Id));
+            .Where(t => !user.OwnedTruckIds.Contains(t.Id))
+            .ToList();
+
+        if (!notOwnedTrucks.Any())
+        {
+            Console.WriteLine("No more trucks left to buy");
+        }
+
+        Console.WriteLine("---Select A Truck By Id---");
+        Console.WriteLine("Press x to go back");
+
         foreach (var truck in notOwnedTrucks)
         {
-            Console.WriteLine(truck);
+            Console.WriteLine($"{truck} | Price: {truck.Price}");
         }
-        int input = int.Parse(Console.ReadLine());
+        bool work = true;
+        while (work)
+        {
+            string input = Console.ReadLine();
 
-        var selectedTruck = trucks.FirstOrDefault(t => t.Id == input);
+            if (input == "x")
+            {
+                return;
+            }
+            if (!notOwnedTrucks.Any(t => t.Id == int.Parse(input)))
+            {
+                Console.WriteLine("Already own that truck. Enter to go back");
+                Console.ReadLine();
+                return;
+            }
+            var selectedTruck = trucks.FirstOrDefault(t => t.Id == int.Parse(input));
 
-        shop.BuyTruck(selectedTruck.Id);
+            shop.BuyTruck(selectedTruck.Id);
+
+            work = false;
+        }
     }
 }

@@ -2,23 +2,23 @@
 {
     class MoneyManager
     {
-        private UserHandler.UserData userData;
+        private UserHandler.UserData User => Session.User;
+        private double TotalDebt;
+        public DateTime lastTaxTime = DateTime.Now;
 
-        public MoneyManager(string name)
-        {
-            userData = UserHandler.LoadUser(name);
-        }
+        private const int TaxInterval = 5;
+
         public override string ToString()
         {
-            return $"Money In Acc: {userData.Money}, Debt: {userData.Debt}";
+            return $"Money In Acc: {User.Money}, Debt: {User.Debt}, NextPayment: {User.NextDebtPayment}";
         }
 
         public void SpendMoney(double amount)
         {
-            if (userData.Money >= amount)
+            if (User.Money >= amount)
             {
-                userData.Money -= amount;
-                UserHandler.SaveUser(userData);
+                User.Money -= amount;
+                UserHandler.SaveUser(User);
             }
             else
             {
@@ -28,40 +28,103 @@
 
         public void AddMoney(double amount)
         {
-            userData.Money += amount;
-            UserHandler.SaveUser(userData);
+            User.Money += amount;
+            UserHandler.SaveUser(User);
         }
 
         public void TakeOutDebt(double amount)
         {
-            AddMoney(amount);
-            userData.Debt += amount;
+            User.Money += amount;
+
+            double debtAmount = amount * 1.25;
+            User.Debt += debtAmount;
+            TotalDebt = debtAmount;
+
+            User.NextDebtPayment = DateTime.Now.AddMinutes(1);
+            UserHandler.SaveUser(User);
         }
 
         public void PayBackDebt(double amount)
         {
-            if (userData.Money >= amount)
+            if (User.Debt <= 0)
             {
-                SpendMoney(amount);
-                userData.Debt -= amount;
+                Console.WriteLine("No debt");
+                return;
+            }
+            if (User.Money >= amount)
+            {
+                DebtPayment(amount);
+                TotalDebt -= amount;
             }
             else
             {
-                Console.WriteLine("can't pay back that much");
-                return;
+                Console.WriteLine("Can't pay back that much");
             }
         }
 
-        public void PayPercentage(double percent)
+        public void DebtPayment(double amount)
         {
-            double payment = userData.Debt * percent;
-            userData.Debt -= payment;
-            if (userData.Debt < 0)
+            if (User.Money < amount)
             {
-                userData.Debt = 0;
+                Console.WriteLine("Not enough money");
+                return;
             }
 
-            Console.WriteLine($"Debt Payment made:{payment}, Remaining Debt {userData.Debt}");
+            User.Money -= amount;
+            User.Debt -= amount;
+
+            if (User.Debt < 0)
+            {
+                User.Debt = 0;
+                User.NextDebtPayment = DateTime.Now;
+            }
+            UserHandler.SaveUser(User);
+        }
+
+        public void UpdateDebt()
+        {
+            if (User.Debt <= 0)
+            {
+                User.NextDebtPayment = DateTime.Now;
+                return;
+            }
+            if (DateTime.Now >= User.NextDebtPayment)
+            {
+                double payment = TotalDebt * 0.2;
+                User.NextDebtPayment = User.NextDebtPayment.AddMinutes(1);
+                DebtPayment(payment);
+                UserHandler.SaveUser(User);
+            }
+        }
+
+
+        public void Taxes()
+        {
+            var user = Session.User;
+            var truckCount = user.OwnedTruckIds.Count;
+
+            if ((DateTime.Now - lastTaxTime).TotalMinutes >= TaxInterval)
+            {
+                double taxAmount = truckCount * 10000;
+
+                if (taxAmount > 0)
+                {
+                    if (user.Money >= taxAmount)
+                    {
+                        user.Money -= taxAmount;
+                        Console.WriteLine($"Taxes paid for {truckCount} truck(s): ${taxAmount}");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Not enough money to pay taxes for {truckCount} truck(s)! Adding ${taxAmount} to debt.");
+                        TakeOutDebt(taxAmount);
+                    }
+
+                    UserHandler.SaveUser(user);
+                }
+
+                lastTaxTime = DateTime.Now;
+            }
         }
     }
 }

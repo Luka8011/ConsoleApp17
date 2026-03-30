@@ -9,7 +9,6 @@
         private LocationData data;
         Random Rand = new Random();
 
-        UserHandler.UserData UserData { get; set; }
         #endregion
 
         #region ctors
@@ -22,14 +21,16 @@
         #endregion
 
         #region Methods
-        public Job Generate(int input)
+        public Job Generate()
         {
+            var user = Session.User;
+
             int pay = 0;
-            switch (input)
+            switch (user.LicenseGrade)
             {
-                case 1: pay = Rand.Next(2000, 3500); break; 
+                case 1: pay = Rand.Next(2000, 3500); break;
                 case 2: pay = Rand.Next(3500, 5000); break;
-                case 3: pay = Rand.Next(5000, 6000); break;
+                case 3: pay = Rand.Next(5000, 6500); break;
             }
 
             int loc1 = Rand.Next(0, data.locations.Length);
@@ -48,15 +49,21 @@
                 Distance = data.distances[loc2][loc1]
             };
 
-            Console.WriteLine($"Job: from {job.From} to {job.To} Distance: {job.Distance}, Pay: {job.Pay}. Accept?(y/n)");
-            string accept = Console.ReadLine();
+            return job;
 
-            if (accept.ToLower() == "y")
+        }
+
+        public int GetDistance(string from, string to)
+        {
+            int fromIndex = Array.IndexOf(data.locations, from);
+            int toIndex = Array.IndexOf(data.locations, to);
+
+            if (fromIndex == -1 || toIndex == -1)
             {
-                return job;
+                return 0;
             }
-            return null;
 
+            return data.distances[toIndex][fromIndex];
         }
         #endregion
 

@@ -1,5 +1,4 @@
 ﻿using System.Text.Json;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ConsoleApp17
 {
@@ -9,10 +8,6 @@ namespace ConsoleApp17
         private string _name;
         private string _email;
         private string _password;
-        public double Money;
-        public double Debt;
-        public int LicenseGrade;
-        public List<int> OwnedTruckIds;
         #endregion
 
         #region Ctors
@@ -38,7 +33,7 @@ namespace ConsoleApp17
                               .Parent
                               .FullName;
 
-            string directoryPath = Path.Combine(projectPath, "Jsons", "Users");
+            string directoryPath = Path.Combine(projectPath, "Data", "Users");
             string userFolder = Path.Combine(directoryPath, $"{name}Folder");
 
             if (!Directory.Exists(userFolder))
@@ -48,7 +43,7 @@ namespace ConsoleApp17
 
             string userJson = Path.Combine(userFolder, $"User{name}.json");
 
-            var userData = new
+            var userData = new UserData
             {
                 Name = name,
                 Email = email,
@@ -56,7 +51,7 @@ namespace ConsoleApp17
                 Money = 5000,
                 Debt = 0,
                 LicenseGrade = 1,
-                OwnedTruckIds = new int[] {1,2,3}
+                OwnedTruckIds = new List<int> { 1, 2 }
             };
 
 
@@ -77,18 +72,20 @@ namespace ConsoleApp17
                                           .Parent
                                           .FullName;
 
-            string userFolder = Path.Combine(projectPath, "Jsons", "Users", $"{name}Folder");
-            string UserJsonPath = Path.Combine(userFolder, $"User{name}.json");
+            string userFolder = Path.Combine(projectPath, "Data", "Users", $"{name}Folder");
+            string userJsonPath = Path.Combine(userFolder, $"User{name}.json");
 
-            if (!File.Exists(UserJsonPath))
+            if (!File.Exists(userJsonPath))
             {
                 Console.WriteLine("This person doesn't exist.");
                 return null;
             }
 
-            string json = File.ReadAllText(UserJsonPath);
-            return JsonSerializer.Deserialize<UserData>(json);
+            string json = File.ReadAllText(userJsonPath);
+            var user = JsonSerializer.Deserialize<UserData>(json);
+            user.OwnedTruckIds ??= new List<int>();
 
+            return user;
         }
 
         public static void SaveUser(UserData data)
@@ -97,30 +94,39 @@ namespace ConsoleApp17
                                           .Parent
                                           .Parent
                                           .Parent
-            .FullName;
+                                          .FullName;
 
-            string userFolder = Path.Combine(projectPath, "Jsons", "Users", $"{data.Name}Folder");
+            string userFolder = Path.Combine(projectPath, "Data", "Users", $"{data.Name}Folder");
+
             if (!Directory.Exists(userFolder))
                 Directory.CreateDirectory(userFolder);
 
             string userJson = Path.Combine(userFolder, $"User{data.Name}.json");
 
-            string json = JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true });
-            File.WriteAllText(userJson, json);
+            string json = JsonSerializer.Serialize(data, new JsonSerializerOptions
+            {
+                WriteIndented = true
+            });
 
+            File.WriteAllText(userJson, json);
         }
         #endregion
 
         #region NestedClasses
         public class UserData
         {
+            public UserData()
+            {
+                NextDebtPayment = DateTime.Now.AddMinutes(3);
+            }
             public string Name { get; set; }
             public string Email { get; set; }
             public string Password { get; set; }
             public double Money { get; set; }
             public double Debt { get; set; }
             public int LicenseGrade { get; set; }
-            public List<int> OwnedTruckIds { get; internal set; }
+            public List<int> OwnedTruckIds { get; set; }
+            public DateTime NextDebtPayment { get; set; }
         }
         #endregion
     }

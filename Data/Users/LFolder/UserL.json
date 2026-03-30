@@ -1,0 +1,13 @@
+{
+  "Name": "L",
+  "Email": "L",
+  "Password": "L",
+  "Money": 20859.600000000002,
+  "Debt": 0,
+  "LicenseGrade": 1,
+  "OwnedTruckIds": [
+    1,
+    2
+  ],
+  "NextDebtPayment": "2026-03-30T18:17:01.6417121+04:00"
+}

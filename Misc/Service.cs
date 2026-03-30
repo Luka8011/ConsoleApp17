@@ -1,51 +1,50 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
+﻿using ConsoleApp17;
+using ConsoleApp17.Money;
 
-namespace ConsoleApp17.Misc
+class Service
 {
-    class Service
+    public UserHandler.UserData CurrentUserData { get; set; }
+
+    public UserHandler.UserData Register(string name, string email, string password)
     {
-        public UserHandler CurrentUser {get; set;}
-        public UserHandler.UserData CurrentUserData { get; set; }
-        public UserHandler.UserData Register(string name, string email, string password)
+        var existingUser = UserHandler.LoadUser(name);
+        if (existingUser != null)
         {
-            var existingUser = UserHandler.LoadUser(name);
-            if (existingUser != null)
-            {
-                Console.WriteLine("User exists already");
-                return null;
-            }
-
-            UserHandler.CreateUser(name, email, password);
-            CurrentUserData = UserHandler.LoadUser(name);
-            CurrentUser = new UserHandler(name);
-            Session.UserHandler = CurrentUser;
-
-            return CurrentUserData;
+            Console.WriteLine("User exists already");
+            return null;
         }
 
-        public UserHandler.UserData Login(string name, string password)
+        UserHandler.CreateUser(name, email, password);
+
+        var user = UserHandler.LoadUser(name);
+
+        CurrentUserData = user;
+        Session.User = user;
+        Session.CurrentUserMoney = new MoneyManager();
+
+        return user;
+    }
+
+    public UserHandler.UserData Login(string name, string password)
+    {
+        var user = UserHandler.LoadUser(name);
+
+        if (user == null)
         {
-            var existingUser = UserHandler.LoadUser(name);
-            if (existingUser == null)
-            {
-                Console.WriteLine("User Doesn't Exist");
-                return null;
-            }
-            if (existingUser.Password != password)
-            {
-                Console.WriteLine("Wrong password");
-            }
-
-            CurrentUserData = UserHandler.LoadUser(name);
-            CurrentUser = new UserHandler(name);
-            Session.UserHandler = CurrentUser;
-
-            return CurrentUserData;
+            Console.WriteLine("User doesn't exist");
+            return null;
         }
+
+        if (user.Password != password)
+        {
+            Console.WriteLine("Wrong password");
+            return null;
+        }
+
+        CurrentUserData = user;
+        Session.User = user;
+        Session.CurrentUserMoney = new MoneyManager();
+
+        return user;
     }
 }
